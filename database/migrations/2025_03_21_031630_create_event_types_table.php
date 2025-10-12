@@ -16,7 +16,6 @@ return new class extends Migration
             $table->string('name');
             $table->text('description')->nullable();
             $table->foreignId('organization_id')->constrained('organizations')->onDelete('cascade');
-            $table->json('default_positions')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

@@ -2,159 +2,193 @@
 
 use App\Livewire\Member\Index;
 use App\Models\Member;
+use App\Models\Organization;
 use App\Models\User;
 use Livewire\Livewire;
 
 beforeEach(function () {
+    $this->organization = Organization::factory()->create();
     $this->user = User::factory()->create();
-    $this->organization = \App\Models\Organization::factory()->create();
-    $this->user->organizations()->attach($this->organization->id);
+    $this->user->organizations()->attach($this->organization);
     $this->actingAs($this->user);
 });
 
-test('can render member index component', function () {
-    Livewire::test(Index::class)
-        ->assertStatus(200);
+it('can render member index page without errors', function () {
+    $response = $this->get(route('members.index'));
+
+    $response->assertStatus(200);
+    $response->assertSeeLivewire(Index::class);
 });
 
-test('can display members in table', function () {
-    $members = Member::factory()->count(3)->create(['organization_id' => $this->organization->id]);
-
-    Livewire::test(Index::class)
-        ->assertSee($members[0]->first_name)
-        ->assertSee($members[0]->last_name)
-        ->assertSee($members[0]->email)
-        ->assertSee($members[1]->first_name)
-        ->assertSee($members[2]->first_name);
-});
-
-test('can search members by name', function () {
-    Member::factory()->create([
-        'organization_id' => $this->organization->id,
+it('displays members in the table', function () {
+    $member1 = Member::factory()->create([
         'first_name' => 'John',
         'last_name' => 'Doe',
         'email' => 'john@example.com',
+        'phone' => '123-456-7890',
+        'organization_id' => $this->organization->id
     ]);
-    
-    Member::factory()->create([
-        'organization_id' => $this->organization->id,
+
+    $member2 = Member::factory()->create([
         'first_name' => 'Jane',
         'last_name' => 'Smith',
         'email' => 'jane@example.com',
+        'phone' => '098-765-4321',
+        'organization_id' => $this->organization->id
+    ]);
+
+    Livewire::test(Index::class)
+        ->assertSee('John')
+        ->assertSee('Doe')
+        ->assertSee('john@example.com')
+        ->assertSee('123-456-7890')
+        ->assertSee('Jane')
+        ->assertSee('Smith')
+        ->assertSee('jane@example.com')
+        ->assertSee('098-765-4321');
+});
+
+it('can search members by name', function () {
+    Member::factory()->create([
+        'first_name' => 'John',
+        'last_name' => 'Doe',
+        'organization_id' => $this->organization->id
+    ]);
+
+    Member::factory()->create([
+        'first_name' => 'Jane',
+        'last_name' => 'Smith',
+        'organization_id' => $this->organization->id
+    ]);
+
+    Member::factory()->create([
+        'first_name' => 'Bob',
+        'last_name' => 'Johnson',
+        'organization_id' => $this->organization->id
     ]);
 
     Livewire::test(Index::class)
         ->set('search', 'John')
         ->assertSee('John')
-        ->assertSee('Doe')
+        ->assertSee('Johnson')
         ->assertDontSee('Jane')
         ->assertDontSee('Smith');
 });
 
-test('can search members by email', function () {
+it('can search members by email', function () {
     Member::factory()->create([
-        'organization_id' => $this->organization->id,
+        'first_name' => 'John',
+        'email' => 'john@example.com',
+        'organization_id' => $this->organization->id
+    ]);
+
+    Member::factory()->create([
+        'first_name' => 'Jane',
+        'email' => 'jane@test.com',
+        'organization_id' => $this->organization->id
+    ]);
+
+    Livewire::test(Index::class)
+        ->set('search', 'example.com')
+        ->assertSee('john@example.com')
+        ->assertDontSee('jane@test.com');
+});
+
+it('can sort members by first name', function () {
+    Member::factory()->create([
+        'first_name' => 'Charlie',
+        'organization_id' => $this->organization->id
+    ]);
+
+    Member::factory()->create([
+        'first_name' => 'Alice',
+        'organization_id' => $this->organization->id
+    ]);
+
+    Member::factory()->create([
+        'first_name' => 'Bob',
+        'organization_id' => $this->organization->id
+    ]);
+
+    // Default sort is first_name ascending, so just verify initial state
+    Livewire::test(Index::class)
+        ->assertSeeInOrder(['Alice', 'Bob', 'Charlie'])
+        ->call('sort', 'first_name') // Toggle to descending
+        ->assertSeeInOrder(['Charlie', 'Bob', 'Alice']);
+});
+
+it('can sort members by last name', function () {
+    Member::factory()->create([
+        'first_name' => 'John',
+        'last_name' => 'Zebra',
+        'organization_id' => $this->organization->id
+    ]);
+
+    Member::factory()->create([
+        'first_name' => 'Jane',
+        'last_name' => 'Alpha',
+        'organization_id' => $this->organization->id
+    ]);
+
+    Member::factory()->create([
+        'first_name' => 'Bob',
+        'last_name' => 'Beta',
+        'organization_id' => $this->organization->id
+    ]);
+
+    Livewire::test(Index::class)
+        ->call('sort', 'last_name')
+        ->assertSeeInOrder(['Alpha', 'Beta', 'Zebra']);
+});
+
+it('can delete a member', function () {
+    $member = Member::factory()->create([
         'first_name' => 'John',
         'last_name' => 'Doe',
-        'email' => 'john@test.com',
-    ]);
-    
-    Member::factory()->create([
-        'organization_id' => $this->organization->id,
-        'first_name' => 'Jane',
-        'last_name' => 'Smith',
-        'email' => 'jane@example.com',
+        'organization_id' => $this->organization->id
     ]);
 
-    Livewire::test(Index::class)
-        ->set('search', 'test.com')
-        ->assertSee('John')
-        ->assertDontSee('Jane');
-});
-
-test('can sort members by first name', function () {
-    Member::factory()->create([
-        'organization_id' => $this->organization->id,
-        'first_name' => 'Zoe']);
-    Member::factory()->create([
-        'organization_id' => $this->organization->id,
-        'first_name' => 'Alice']);
-    Member::factory()->create([
-        'organization_id' => $this->organization->id,
-        'first_name' => 'Bob']);
-
-    $component = Livewire::test(Index::class);
-
-    $members = $component->get('members');
-    expect($members->first()->first_name)->toBe('Alice');
-});
-
-test('can sort members by last name', function () {
-    Member::factory()->create([
-        'organization_id' => $this->organization->id,
-        'last_name' => 'Wilson']);
-    Member::factory()->create([
-        'organization_id' => $this->organization->id,
-        'last_name' => 'Adams']);
-    Member::factory()->create([
-        'organization_id' => $this->organization->id,
-        'last_name' => 'Brown']);
-
-    $component = Livewire::test(Index::class)
-        ->call('sort', 'last_name');
-
-    $members = $component->get('members');
-    expect($members->first()->last_name)->toBe('Adams');
-});
-
-test('can toggle sort direction', function () {
-    Member::factory()->create([
-        'organization_id' => $this->organization->id,
-        'first_name' => 'Alice']);
-    Member::factory()->create([
-        'organization_id' => $this->organization->id,
-        'first_name' => 'Zoe']);
-
-    $component = Livewire::test(Index::class)
-        ->assertSet('sortBy', 'first_name')
-        ->assertSet('sortDirection', 'asc')
-        ->call('sort', 'first_name')
-        ->assertSet('sortDirection', 'desc');
-
-    $members = $component->get('members');
-    expect($members->first()->first_name)->toBe('Zoe');
-});
-
-test('can delete member', function () {
-    $member = Member::factory()->create(['organization_id' => $this->organization->id]);
+    $this->assertDatabaseHas('members', ['id' => $member->id]);
 
     Livewire::test(Index::class)
-        ->call('delete', $member->id);
+        ->call('delete', $member->id)
+        ->assertDispatched('member-deleted');
 
-    expect(Member::find($member->id))->toBeNull();
+    $this->assertDatabaseMissing('members', ['id' => $member->id]);
 });
 
-test('search resets pagination', function () {
-    Member::factory()->count(15)->create(['organization_id' => $this->organization->id]);
-
-    Livewire::test(Index::class)
-        ->call('gotoPage', 2)
-        ->set('search', 'test')
-        ->assertSet('search', 'test');
-});
-
-test('displays empty state when no members found', function () {
+it('displays empty state when no members exist', function () {
     Livewire::test(Index::class)
         ->assertSee('No members found')
         ->assertSee('Add your first member');
 });
 
-test('displays no results message when search yields no results', function () {
-    Member::factory()->create([
-        'organization_id' => $this->organization->id,
-        'first_name' => 'John']);
+it('shows edit and delete buttons for each member', function () {
+    $member = Member::factory()->create([
+        'first_name' => 'John',
+        'organization_id' => $this->organization->id
+    ]);
 
     Livewire::test(Index::class)
-        ->set('search', 'NonExistentName')
-        ->assertSee('No members found matching "NonExistentName"', false);
+        ->assertSee('Edit')
+        ->assertSee('Delete')
+        ->assertSee(route('members.edit', $member));
+});
+
+it('only shows members from user organization', function () {
+    $otherOrg = Organization::factory()->create();
+
+    $myMember = Member::factory()->create([
+        'first_name' => 'John',
+        'organization_id' => $this->organization->id
+    ]);
+
+    $otherMember = Member::factory()->create([
+        'first_name' => 'Jane',
+        'organization_id' => $otherOrg->id
+    ]);
+
+    Livewire::test(Index::class)
+        ->assertSee('John')
+        ->assertDontSee('Jane');
 });

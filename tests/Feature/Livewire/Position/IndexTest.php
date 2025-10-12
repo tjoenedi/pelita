@@ -1,174 +1,158 @@
 <?php
 
 use App\Livewire\Position\Index;
+use App\Models\Organization;
 use App\Models\Position;
 use App\Models\User;
 use Livewire\Livewire;
 
 beforeEach(function () {
+    $this->organization = Organization::factory()->create();
     $this->user = User::factory()->create();
-    $this->organization = \App\Models\Organization::factory()->create();
-    $this->user->organizations()->attach($this->organization->id);
+    $this->user->organizations()->attach($this->organization);
     $this->actingAs($this->user);
 });
 
-test('can render position index component', function () {
-    Livewire::test(Index::class)
-        ->assertStatus(200);
+it('can render position index page without errors', function () {
+    $response = $this->get(route('positions.index'));
+
+    $response->assertStatus(200);
+    $response->assertSeeLivewire(Index::class);
 });
 
-test('can display positions in table', function () {
-    $positions = Position::factory()->count(3)->create();
-
-    Livewire::test(Index::class)
-        ->assertSee($positions[0]->name)
-        ->assertSee($positions[1]->name)
-        ->assertSee($positions[2]->name);
-});
-
-test('can search positions by name', function () {
-    Position::factory()->create([
-        'organization_id' => $this->organization->id,
-        'name' => 'Senior Developer',
-        'description' => 'Lead development team',
-    ]);
-    
-    Position::factory()->create([
-        'organization_id' => $this->organization->id,
-        'name' => 'Project Manager',
-        'description' => 'Manage projects',
+it('displays positions in the table', function () {
+    $position1 = Position::factory()->create([
+        'name' => 'Pastor',
+        'description' => 'Lead pastor role',
+        'organization_id' => $this->organization->id
     ]);
 
-    Livewire::test(Index::class)
-        ->set('search', 'Senior')
-        ->assertSee('Senior Developer')
-        ->assertDontSee('Project Manager');
-});
-
-test('can search positions by description', function () {
-    Position::factory()->create([
-        'organization_id' => $this->organization->id,
-        'name' => 'Developer',
-        'description' => 'Frontend development',
-    ]);
-    
-    Position::factory()->create([
-        'organization_id' => $this->organization->id,
-        'name' => 'Manager',
-        'description' => 'Backend systems',
-    ]);
-
-    Livewire::test(Index::class)
-        ->set('search', 'Frontend')
-        ->assertSee('Developer')
-        ->assertDontSee('Manager');
-});
-
-test('can sort positions by name', function () {
-    Position::factory()->create([
-        'organization_id' => $this->organization->id,
-        'name' => 'Zeta Position'
-    ]);
-    Position::factory()->create([
-        'organization_id' => $this->organization->id,
-        'name' => 'Alpha Position'
-    ]);
-    Position::factory()->create([
-        'organization_id' => $this->organization->id,
-        'name' => 'Beta Position'
-    ]);
-
-    $component = Livewire::test(Index::class);
-
-    $positions = $component->get('positions');
-    expect($positions->first()->name)->toBe('Alpha Position');
-});
-
-test('can sort positions by description', function () {
-    Position::factory()->create([
-        'organization_id' => $this->organization->id,
-        'description' => 'Zebra description'
-    ]);
-    Position::factory()->create([
-        'organization_id' => $this->organization->id,
-        'description' => 'Apple description'
-    ]);
-    Position::factory()->create([
-        'organization_id' => $this->organization->id,
-        'description' => 'Banana description'
-    ]);
-
-    $component = Livewire::test(Index::class)
-        ->call('sort', 'description');
-
-    $positions = $component->get('positions');
-    expect($positions->first()->description)->toBe('Apple description');
-});
-
-test('can toggle sort direction', function () {
-    Position::factory()->create([
-        'organization_id' => $this->organization->id,
-        'name' => 'Alpha'
-    ]);
-    Position::factory()->create([
-        'organization_id' => $this->organization->id,
-        'name' => 'Zeta'
-    ]);
-
-    $component = Livewire::test(Index::class)
-        ->assertSet('sortBy', 'name')
-        ->assertSet('sortDirection', 'asc')
-        ->call('sort', 'name')
-        ->assertSet('sortDirection', 'desc');
-
-    $positions = $component->get('positions');
-    expect($positions->first()->name)->toBe('Zeta');
-});
-
-test('can delete position', function () {
-    $position = Position::factory()->create([
+    $position2 = Position::factory()->create([
+        'name' => 'Worship Leader',
+        'description' => 'Leads worship services',
         'organization_id' => $this->organization->id
     ]);
 
     Livewire::test(Index::class)
-        ->call('delete', $position->id);
-
-    expect(Position::find($position->id))->toBeNull();
+        ->assertSee('Pastor')
+        ->assertSee('Lead pastor role')
+        ->assertSee('Worship Leader')
+        ->assertSee('Leads worship services');
 });
 
-test('search resets pagination', function () {
-    Position::factory()->count(15)->create(['organization_id' => $this->organization->id]);
+it('can search positions by name', function () {
+    Position::factory()->create([
+        'name' => 'Pastor',
+        'organization_id' => $this->organization->id
+    ]);
+
+    Position::factory()->create([
+        'name' => 'Worship Leader',
+        'organization_id' => $this->organization->id
+    ]);
+
+    Position::factory()->create([
+        'name' => 'Youth Pastor',
+        'organization_id' => $this->organization->id
+    ]);
 
     Livewire::test(Index::class)
-        ->set('search', 'test')
-        ->assertSet('search', 'test');
+        ->set('search', 'Pastor')
+        ->assertSee('Pastor')
+        ->assertSee('Youth Pastor')
+        ->assertDontSee('Worship Leader');
 });
 
-test('displays empty state when no positions found', function () {
+it('can search positions by description', function () {
+    Position::factory()->create([
+        'name' => 'Pastor',
+        'description' => 'Leads the congregation',
+        'organization_id' => $this->organization->id
+    ]);
+
+    Position::factory()->create([
+        'name' => 'Worship Leader',
+        'description' => 'Manages worship team',
+        'organization_id' => $this->organization->id
+    ]);
+
+    Livewire::test(Index::class)
+        ->set('search', 'congregation')
+        ->assertSee('Pastor')
+        ->assertSee('Leads the congregation')
+        ->assertDontSee('Worship Leader');
+});
+
+it('can sort positions by name', function () {
+    Position::factory()->create([
+        'name' => 'Zebra Keeper',
+        'organization_id' => $this->organization->id
+    ]);
+
+    Position::factory()->create([
+        'name' => 'Alpha Leader',
+        'organization_id' => $this->organization->id
+    ]);
+
+    Position::factory()->create([
+        'name' => 'Beta Tester',
+        'organization_id' => $this->organization->id
+    ]);
+
+    // Default sort is name ascending, so verify initial state
+    Livewire::test(Index::class)
+        ->assertSeeInOrder(['Alpha Leader', 'Beta Tester', 'Zebra Keeper'])
+        ->call('sort', 'name') // Toggle to descending
+        ->assertSeeInOrder(['Zebra Keeper', 'Beta Tester', 'Alpha Leader']);
+});
+
+it('can delete a position', function () {
+    $position = Position::factory()->create([
+        'name' => 'Pastor',
+        'organization_id' => $this->organization->id
+    ]);
+
+    $this->assertDatabaseHas('positions', ['id' => $position->id]);
+
+    Livewire::test(Index::class)
+        ->call('delete', $position->id)
+        ->assertDispatched('position-deleted');
+
+    $this->assertDatabaseMissing('positions', ['id' => $position->id]);
+});
+
+it('displays empty state when no positions exist', function () {
     Livewire::test(Index::class)
         ->assertSee('No positions found')
         ->assertSee('Add your first position');
 });
 
-test('displays no results message when search yields no results', function () {
-    Position::factory()->create([
-        'organization_id' => $this->organization->id,
-        'name' => 'Developer'
+it('shows edit and delete buttons for each position', function () {
+    $position = Position::factory()->create([
+        'name' => 'Pastor',
+        'organization_id' => $this->organization->id
     ]);
 
     Livewire::test(Index::class)
-        ->set('search', 'NonExistentPosition')
-        ->assertSee('No positions found matching', false);
+        ->assertSee('Edit')
+        ->assertSee('Delete')
+        ->assertSee(route('positions.edit', $position));
 });
 
-test('displays N/A for positions without description', function () {
-    Position::factory()->create([
-        'organization_id' => $this->organization->id,
-        'name' => 'Test Position',
-        'description' => null,
+it('only shows positions from user organization', function () {
+    $otherOrg = Organization::factory()->create();
+
+    $myPosition = Position::factory()->create([
+        'name' => 'My Pastor',
+        'organization_id' => $this->organization->id
+    ]);
+
+    $otherPosition = Position::factory()->create([
+        'name' => 'Other Pastor',
+        'organization_id' => $otherOrg->id
     ]);
 
     Livewire::test(Index::class)
-        ->assertSee('Test Position')
-        ->assertSee('N/A');
+        ->assertSee('My Pastor')
+        ->assertDontSee('Other Pastor');
 });

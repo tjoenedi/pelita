@@ -66,5 +66,6 @@ class Index extends Component
         $member->delete();
 
         session()->flash('success', 'Member deleted successfully.');
+        $this->dispatch('member-deleted');
     }
 }

@@ -15,6 +15,9 @@
                 <flux:navlist.group :heading="__('Platform')" class="grid">
                     <flux:navlist.item icon="home" :href="route('dashboard')" :current="request()->routeIs('dashboard')" wire:navigate>{{ __('Dashboard') }}</flux:navlist.item>
                     <flux:navlist.item icon="user" :href="route('members.index')" :current="request()->routeIs('members.*')" wire:navigate>Members</flux:navlist.item>
+                    <flux:navlist.item icon="briefcase" :href="route('positions.index')" :current="request()->routeIs('positions.*')" wire:navigate>Positions</flux:navlist.item>
+                    <flux:navlist.item icon="calendar" :href="route('events.index')" :current="request()->routeIs('events.*')" wire:navigate>Events</flux:navlist.item>
+                    <flux:navlist.item icon="squares-2x2" :href="route('event-types.index')" :current="request()->routeIs('event-types.*')" wire:navigate>Event Types</flux:navlist.item>
                 </flux:navlist.group>
             </flux:navlist>
 
@@ -25,7 +28,7 @@
                 <flux:profile
                     :name="auth()->user()->name"
                     :initials="auth()->user()->initials()"
-                    icon-trailing="chevrons-up-down"
+                    icon-trailing="chevron-up-down"
                 />
 
                 <flux:menu class="w-[220px]">
