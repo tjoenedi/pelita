@@ -11,23 +11,38 @@ class Edit extends Component
     use WithFileUploads;
 
     public Member $member;
-    
+
     // Form fields
     public $first_name;
+
     public $last_name;
+
     public $phone;
+
     public $address;
+
     public $city;
+
     public $state_province;
+
     public $zip;
+
     public $country;
+
     public $birth_date;
+
     public $birth_place;
+
     public $gender;
+
     public $baptism_date;
+
     public $marital_status;
+
     public $email;
+
     public $profile_picture;
+
     public $new_profile_picture;
 
     protected function rules()
@@ -46,7 +61,7 @@ class Edit extends Component
             'gender' => 'nullable|in:M,F',
             'baptism_date' => 'nullable|date',
             'marital_status' => 'nullable|in:Single,Married,Divorced,Widowed',
-            'email' => 'required|email|max:255|unique:members,email,' . $this->member->id,
+            'email' => 'required|email|max:255|unique:members,email,'.$this->member->id,
             'new_profile_picture' => 'nullable|image|max:2048',
         ];
     }
@@ -102,7 +117,7 @@ class Edit extends Component
         ]);
 
         session()->flash('success', 'Member updated successfully.');
-        
+
         return redirect()->route('members.index');
     }
 

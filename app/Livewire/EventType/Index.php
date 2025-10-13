@@ -49,8 +49,8 @@ class Index extends Component
             ->whereIn('organization_id', Auth::user()->organizations->pluck('id'))
             ->when($this->search, function ($query) use ($likeOperator) {
                 $query->where(function ($q) use ($likeOperator) {
-                    $q->where('name', $likeOperator, '%' . $this->search . '%')
-                        ->orWhere('description', $likeOperator, '%' . $this->search . '%');
+                    $q->where('name', $likeOperator, '%'.$this->search.'%')
+                        ->orWhere('description', $likeOperator, '%'.$this->search.'%');
                 });
             })
             ->orderBy($this->sortBy, $this->sortDirection)

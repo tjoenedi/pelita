@@ -53,8 +53,8 @@ test('member can be created with minimal required data', function () {
 });
 
 test('member fillable attributes are correct', function () {
-    $member = new Member();
-    
+    $member = new Member;
+
     $expectedFillable = [
         'first_name',
         'last_name',

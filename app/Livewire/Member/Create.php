@@ -10,22 +10,36 @@ use Livewire\WithFileUploads;
 class Create extends Component
 {
     use WithFileUploads;
-    
+
     // Form fields
     public $first_name = '';
+
     public $last_name = '';
+
     public $phone = '';
+
     public $address = '';
+
     public $city = '';
+
     public $state_province = '';
+
     public $zip = '';
+
     public $country = '';
+
     public $birth_date = '';
+
     public $birth_place = '';
+
     public $gender = '';
+
     public $baptism_date = '';
+
     public $marital_status = '';
+
     public $email = '';
+
     public $profile_picture;
 
     protected $rules = [
@@ -79,7 +93,7 @@ class Create extends Component
         $member = Member::create($data);
 
         session()->flash('success', 'Member created successfully.');
-        
+
         return redirect()->route('members.index');
     }
 

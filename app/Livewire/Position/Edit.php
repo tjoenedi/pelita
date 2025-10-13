@@ -8,8 +8,11 @@ use Livewire\Component;
 class Edit extends Component
 {
     public Position $position;
+
     public $name = '';
+
     public $description = '';
+
     public $organization_id;
 
     protected $rules = [

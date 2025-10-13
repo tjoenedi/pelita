@@ -54,7 +54,7 @@ test('unauthenticated users cannot access member pages', function () {
 
     $this->get(route('members.index'))->assertRedirect('/login');
     $this->get(route('members.create'))->assertRedirect('/login');
-    
+
     $member = Member::factory()->create([
         'organization_id' => $this->organization->id]);
     $this->get(route('members.edit', $member))->assertRedirect('/login');

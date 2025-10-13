@@ -17,7 +17,7 @@ beforeEach(function () {
 
 test('can render member edit component', function () {
     $member = Member::factory()->create([
-        'organization_id' => $this->organization->id
+        'organization_id' => $this->organization->id,
     ]);
 
     Livewire::test(Edit::class, ['member' => $member])
@@ -64,7 +64,7 @@ test('can update member with new data', function () {
 
 test('validates required fields on update', function () {
     $member = Member::factory()->create([
-        'organization_id' => $this->organization->id
+        'organization_id' => $this->organization->id,
     ]);
 
     Livewire::test(Edit::class, ['member' => $member])
@@ -78,11 +78,11 @@ test('validates required fields on update', function () {
 test('validates email uniqueness excluding current member', function () {
     $member1 = Member::factory()->create([
         'organization_id' => $this->organization->id,
-        'email' => 'john@example.com'
+        'email' => 'john@example.com',
     ]);
     $member2 = Member::factory()->create([
         'organization_id' => $this->organization->id,
-        'email' => 'jane@example.com'
+        'email' => 'jane@example.com',
     ]);
 
     // Should allow keeping the same email
@@ -100,7 +100,7 @@ test('validates email uniqueness excluding current member', function () {
 
 test('can upload new profile picture', function () {
     $member = Member::factory()->create([
-        'organization_id' => $this->organization->id
+        'organization_id' => $this->organization->id,
     ]);
     $file = UploadedFile::fake()->image('new-profile.jpg');
 
@@ -117,7 +117,7 @@ test('can upload new profile picture', function () {
 test('retains existing profile picture when no new one uploaded', function () {
     $member = Member::factory()->create([
         'organization_id' => $this->organization->id,
-        'profile_picture' => 'existing-picture.jpg'
+        'profile_picture' => 'existing-picture.jpg',
     ]);
 
     Livewire::test(Edit::class, ['member' => $member])
@@ -130,7 +130,7 @@ test('retains existing profile picture when no new one uploaded', function () {
 
 test('can update all member fields', function () {
     $member = Member::factory()->create([
-        'organization_id' => $this->organization->id
+        'organization_id' => $this->organization->id,
     ]);
 
     Livewire::test(Edit::class, ['member' => $member])
@@ -161,7 +161,7 @@ test('can update all member fields', function () {
 
 test('can cancel and redirect to index', function () {
     $member = Member::factory()->create([
-        'organization_id' => $this->organization->id
+        'organization_id' => $this->organization->id,
     ]);
 
     Livewire::test(Edit::class, ['member' => $member])

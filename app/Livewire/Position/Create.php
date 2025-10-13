@@ -9,7 +9,9 @@ use Livewire\Component;
 class Create extends Component
 {
     public $name = '';
+
     public $description = '';
+
     public $organization_id;
 
     protected $rules = [

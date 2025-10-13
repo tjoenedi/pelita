@@ -45,7 +45,7 @@ class EventFactory extends Factory
             'is_public' => $this->faker->boolean(80),
         ];
 
-        if (!$allDay) {
+        if (! $allDay) {
             $startHour = $this->faker->numberBetween(6, 20);
             $duration = $this->faker->numberBetween(1, 4);
             $data['start_time'] = sprintf('%02d:%02d:00', $startHour, $this->faker->randomElement([0, 15, 30, 45]));

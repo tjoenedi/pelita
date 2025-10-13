@@ -24,13 +24,13 @@ it('displays positions in the table', function () {
     $position1 = Position::factory()->create([
         'name' => 'Pastor',
         'description' => 'Lead pastor role',
-        'organization_id' => $this->organization->id
+        'organization_id' => $this->organization->id,
     ]);
 
     $position2 = Position::factory()->create([
         'name' => 'Worship Leader',
         'description' => 'Leads worship services',
-        'organization_id' => $this->organization->id
+        'organization_id' => $this->organization->id,
     ]);
 
     Livewire::test(Index::class)
@@ -43,17 +43,17 @@ it('displays positions in the table', function () {
 it('can search positions by name', function () {
     Position::factory()->create([
         'name' => 'Pastor',
-        'organization_id' => $this->organization->id
+        'organization_id' => $this->organization->id,
     ]);
 
     Position::factory()->create([
         'name' => 'Worship Leader',
-        'organization_id' => $this->organization->id
+        'organization_id' => $this->organization->id,
     ]);
 
     Position::factory()->create([
         'name' => 'Youth Pastor',
-        'organization_id' => $this->organization->id
+        'organization_id' => $this->organization->id,
     ]);
 
     Livewire::test(Index::class)
@@ -67,13 +67,13 @@ it('can search positions by description', function () {
     Position::factory()->create([
         'name' => 'Pastor',
         'description' => 'Leads the congregation',
-        'organization_id' => $this->organization->id
+        'organization_id' => $this->organization->id,
     ]);
 
     Position::factory()->create([
         'name' => 'Worship Leader',
         'description' => 'Manages worship team',
-        'organization_id' => $this->organization->id
+        'organization_id' => $this->organization->id,
     ]);
 
     Livewire::test(Index::class)
@@ -86,17 +86,17 @@ it('can search positions by description', function () {
 it('can sort positions by name', function () {
     Position::factory()->create([
         'name' => 'Zebra Keeper',
-        'organization_id' => $this->organization->id
+        'organization_id' => $this->organization->id,
     ]);
 
     Position::factory()->create([
         'name' => 'Alpha Leader',
-        'organization_id' => $this->organization->id
+        'organization_id' => $this->organization->id,
     ]);
 
     Position::factory()->create([
         'name' => 'Beta Tester',
-        'organization_id' => $this->organization->id
+        'organization_id' => $this->organization->id,
     ]);
 
     // Default sort is name ascending, so verify initial state
@@ -109,7 +109,7 @@ it('can sort positions by name', function () {
 it('can delete a position', function () {
     $position = Position::factory()->create([
         'name' => 'Pastor',
-        'organization_id' => $this->organization->id
+        'organization_id' => $this->organization->id,
     ]);
 
     $this->assertDatabaseHas('positions', ['id' => $position->id]);
@@ -130,7 +130,7 @@ it('displays empty state when no positions exist', function () {
 it('shows edit and delete buttons for each position', function () {
     $position = Position::factory()->create([
         'name' => 'Pastor',
-        'organization_id' => $this->organization->id
+        'organization_id' => $this->organization->id,
     ]);
 
     Livewire::test(Index::class)
@@ -144,12 +144,12 @@ it('only shows positions from user organization', function () {
 
     $myPosition = Position::factory()->create([
         'name' => 'My Pastor',
-        'organization_id' => $this->organization->id
+        'organization_id' => $this->organization->id,
     ]);
 
     $otherPosition = Position::factory()->create([
         'name' => 'Other Pastor',
-        'organization_id' => $otherOrg->id
+        'organization_id' => $otherOrg->id,
     ]);
 
     Livewire::test(Index::class)

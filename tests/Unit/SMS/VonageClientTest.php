@@ -8,10 +8,10 @@ use Tests\TestCase;
 use Vonage\Client;
 use Vonage\Client\Credentials\Basic;
 use Vonage\Client\Exception\Exception as VonageException;
+use Vonage\SMS\Client as SMSClient;
 use Vonage\SMS\Collection;
 use Vonage\SMS\Message\SMS;
 use Vonage\SMS\SentSMS;
-use Vonage\SMS\Client as SMSClient;
 
 uses(TestCase::class);
 
@@ -32,20 +32,20 @@ test('vonage client sends sms successfully', function () {
     $mockSMSClient = Mockery::mock(SMSClient::class);
     $mockCollection = Mockery::mock(Collection::class);
     $mockSentSMS = Mockery::mock(SentSMS::class);
-    
+
     $mockSentSMS->shouldReceive('getMessageId')
         ->andReturn('test_message_id');
     $mockSentSMS->shouldReceive('getStatus')
         ->andReturn('0');
-    
+
     $mockCollection->shouldReceive('current')
         ->andReturn($mockSentSMS);
-    
+
     $mockSMSClient->shouldReceive('send')
         ->with(Mockery::type(SMS::class))
         ->once()
         ->andReturn($mockCollection);
-    
+
     $mockVonageClient->shouldReceive('sms')
         ->andReturn($mockSMSClient);
 
@@ -54,6 +54,7 @@ test('vonage client sends sms successfully', function () {
         $mock->shouldReceive('__construct')
             ->with('test_key', 'test_secret')
             ->andReturnSelf();
+
         return $mock;
     });
 
@@ -64,11 +65,12 @@ test('vonage client sends sms successfully', function () {
             ->andReturnSelf();
         $mock->shouldReceive('sms')
             ->andReturn($mockVonageClient->sms());
+
         return $mock;
     });
 
-    $vonageClient = new VonageClient();
-    
+    $vonageClient = new VonageClient;
+
     // Use reflection to set the mocked client
     $reflection = new ReflectionClass($vonageClient);
     $property = $reflection->getProperty('client');
@@ -96,17 +98,19 @@ test('vonage client handles client exception', function () {
 
     $mockVonageClient = Mockery::mock(Client::class);
     $mockSMSClient = Mockery::mock(SMSClient::class);
-    
-    $clientException = new class extends Exception implements ClientExceptionInterface {
+
+    $clientException = new class extends Exception implements ClientExceptionInterface
+    {
         protected $message = 'Client error';
+
         protected $code = 400;
     };
-    
+
     $mockSMSClient->shouldReceive('send')
         ->with(Mockery::type(SMS::class))
         ->once()
         ->andThrow($clientException);
-    
+
     $mockVonageClient->shouldReceive('sms')
         ->andReturn($mockSMSClient);
 
@@ -118,6 +122,7 @@ test('vonage client handles client exception', function () {
         $mock->shouldReceive('__construct')
             ->with('test_key', 'test_secret')
             ->andReturnSelf();
+
         return $mock;
     });
 
@@ -127,11 +132,12 @@ test('vonage client handles client exception', function () {
             ->andReturnSelf();
         $mock->shouldReceive('sms')
             ->andReturn($mockVonageClient->sms());
+
         return $mock;
     });
 
-    $vonageClient = new VonageClient();
-    
+    $vonageClient = new VonageClient;
+
     $reflection = new ReflectionClass($vonageClient);
     $property = $reflection->getProperty('client');
     $property->setAccessible(true);
@@ -158,14 +164,14 @@ test('vonage client handles vonage exception', function () {
 
     $mockVonageClient = Mockery::mock(Client::class);
     $mockSMSClient = Mockery::mock(SMSClient::class);
-    
+
     $vonageException = new VonageException('Vonage API error', 500);
-    
+
     $mockSMSClient->shouldReceive('send')
         ->with(Mockery::type(SMS::class))
         ->once()
         ->andThrow($vonageException);
-    
+
     $mockVonageClient->shouldReceive('sms')
         ->andReturn($mockSMSClient);
 
@@ -177,6 +183,7 @@ test('vonage client handles vonage exception', function () {
         $mock->shouldReceive('__construct')
             ->with('test_key', 'test_secret')
             ->andReturnSelf();
+
         return $mock;
     });
 
@@ -186,11 +193,12 @@ test('vonage client handles vonage exception', function () {
             ->andReturnSelf();
         $mock->shouldReceive('sms')
             ->andReturn($mockVonageClient->sms());
+
         return $mock;
     });
 
-    $vonageClient = new VonageClient();
-    
+    $vonageClient = new VonageClient;
+
     $reflection = new ReflectionClass($vonageClient);
     $property = $reflection->getProperty('client');
     $property->setAccessible(true);

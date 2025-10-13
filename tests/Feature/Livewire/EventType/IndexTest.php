@@ -24,22 +24,22 @@ it('can render event type index page', function () {
 it('displays event types in the table', function () {
     $position1 = Position::factory()->create([
         'name' => 'Pastor',
-        'organization_id' => $this->organization->id
+        'organization_id' => $this->organization->id,
     ]);
     $position2 = Position::factory()->create([
         'name' => 'Worship Leader',
-        'organization_id' => $this->organization->id
+        'organization_id' => $this->organization->id,
     ]);
 
     $eventType = EventType::factory()->create([
         'name' => 'Sunday Service',
         'description' => 'Weekly worship service',
-        'organization_id' => $this->organization->id
+        'organization_id' => $this->organization->id,
     ]);
 
     $eventType->positions()->attach([
         $position1->id => ['order' => 0],
-        $position2->id => ['order' => 1]
+        $position2->id => ['order' => 1],
     ]);
 
     Livewire::test(Index::class)
@@ -52,15 +52,15 @@ it('displays event types in the table', function () {
 it('can search event types', function () {
     EventType::factory()->create([
         'name' => 'Sunday Service',
-        'organization_id' => $this->organization->id
+        'organization_id' => $this->organization->id,
     ]);
     EventType::factory()->create([
         'name' => 'Prayer Meeting',
-        'organization_id' => $this->organization->id
+        'organization_id' => $this->organization->id,
     ]);
     EventType::factory()->create([
         'name' => 'Youth Group',
-        'organization_id' => $this->organization->id
+        'organization_id' => $this->organization->id,
     ]);
 
     Livewire::test(Index::class)
@@ -73,15 +73,15 @@ it('can search event types', function () {
 it('can sort event types by name', function () {
     EventType::factory()->create([
         'name' => 'Zebra Meeting',
-        'organization_id' => $this->organization->id
+        'organization_id' => $this->organization->id,
     ]);
     EventType::factory()->create([
         'name' => 'Alpha Service',
-        'organization_id' => $this->organization->id
+        'organization_id' => $this->organization->id,
     ]);
     EventType::factory()->create([
         'name' => 'Beta Group',
-        'organization_id' => $this->organization->id
+        'organization_id' => $this->organization->id,
     ]);
 
     Livewire::test(Index::class)
@@ -92,7 +92,7 @@ it('can sort event types by name', function () {
 it('can delete an event type', function () {
     $eventType = EventType::factory()->create([
         'name' => 'Test Event Type',
-        'organization_id' => $this->organization->id
+        'organization_id' => $this->organization->id,
     ]);
 
     $this->assertDatabaseHas('event_types', ['id' => $eventType->id]);
@@ -120,7 +120,7 @@ it('navigates to create page when create button is clicked', function () {
 it('navigates to edit page when edit button is clicked', function () {
     $eventType = EventType::factory()->create([
         'name' => 'Test Event',
-        'organization_id' => $this->organization->id
+        'organization_id' => $this->organization->id,
     ]);
 
     Livewire::test(Index::class)
@@ -129,13 +129,13 @@ it('navigates to edit page when edit button is clicked', function () {
 
 it('shows active events count for each event type', function () {
     $eventType = EventType::factory()->create([
-        'organization_id' => $this->organization->id
+        'organization_id' => $this->organization->id,
     ]);
 
     // Create some events for this event type
     \App\Models\Event::factory()->count(3)->create([
         'event_type_id' => $eventType->id,
-        'organization_id' => $this->organization->id
+        'organization_id' => $this->organization->id,
     ]);
 
     Livewire::test(Index::class)

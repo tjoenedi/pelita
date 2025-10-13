@@ -1,12 +1,12 @@
 <?php
 
-use App\Models\User;
-use App\Models\Organization;
-use App\Models\Event;
-use App\Models\EventType;
-use App\Livewire\Event\Index;
 use App\Livewire\Event\Create;
 use App\Livewire\Event\Edit;
+use App\Livewire\Event\Index;
+use App\Models\Event;
+use App\Models\EventType;
+use App\Models\Organization;
+use App\Models\User;
 use Livewire\Livewire;
 
 test('authenticated users can view events index page', function () {
@@ -122,12 +122,12 @@ test('events index shows only events from user organizations', function () {
 
     $event1 = Event::factory()->create([
         'organization_id' => $org1->id,
-        'name' => 'Event in User Org'
+        'name' => 'Event in User Org',
     ]);
 
     $event2 = Event::factory()->create([
         'organization_id' => $org2->id,
-        'name' => 'Event in Other Org'
+        'name' => 'Event in Other Org',
     ]);
 
     $this->actingAs($user);

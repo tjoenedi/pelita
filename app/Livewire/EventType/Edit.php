@@ -15,8 +15,11 @@ class Edit extends Component
 
     // Form fields
     public $name = '';
+
     public $description = '';
+
     public $selectedPositions = [];
+
     public $positionOrder = [];
 
     protected $rules = [
@@ -52,14 +55,14 @@ class Edit extends Component
     {
         // Initialize order for newly selected positions
         foreach ($this->selectedPositions as $positionId) {
-            if (!isset($this->positionOrder[$positionId])) {
+            if (! isset($this->positionOrder[$positionId])) {
                 $this->positionOrder[$positionId] = count($this->positionOrder);
             }
         }
 
         // Remove order for deselected positions
         foreach (array_keys($this->positionOrder) as $positionId) {
-            if (!in_array($positionId, $this->selectedPositions)) {
+            if (! in_array($positionId, $this->selectedPositions)) {
                 unset($this->positionOrder[$positionId]);
             }
         }

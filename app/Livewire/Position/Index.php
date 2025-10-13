@@ -12,7 +12,9 @@ class Index extends Component
     use WithPagination;
 
     public $search = '';
+
     public $sortBy = 'name';
+
     public $sortDirection = 'asc';
 
     protected $queryString = ['search', 'sortBy', 'sortDirection'];
@@ -48,8 +50,8 @@ class Index extends Component
             ->whereIn('organization_id', Auth::user()->organizations->pluck('id'))
             ->when($this->search, function ($query) {
                 $query->where(function ($q) {
-                    $q->where('name', 'like', '%' . $this->search . '%')
-                        ->orWhere('description', 'like', '%' . $this->search . '%');
+                    $q->where('name', 'like', '%'.$this->search.'%')
+                        ->orWhere('description', 'like', '%'.$this->search.'%');
                 });
             })
             ->orderBy($this->sortBy, $this->sortDirection)

@@ -3,9 +3,9 @@
 namespace App\Livewire\Event;
 
 use App\Models\Event;
-use App\Models\EventType;
 use App\Models\EventPosition;
 use App\Models\EventPositionMember;
+use App\Models\EventType;
 use App\Models\Member;
 use App\Models\Position;
 use Illuminate\Support\Facades\Auth;
@@ -19,17 +19,26 @@ class Edit extends Component
 
     // Form fields
     public $event_type_id = '';
+
     public $name = '';
+
     public $description = '';
+
     public $date = '';
+
     public $all_day = true;
+
     public $start_time = '';
+
     public $end_time = '';
+
     public $is_active = true;
+
     public $is_public = true;
 
     // Position management
     public $selectedPositions = [];
+
     public $positionAssignments = [];
 
     protected $rules = [
@@ -125,6 +134,9 @@ class Edit extends Component
         if ($value) {
             $eventType = EventType::find($value);
             if ($eventType) {
+                // Auto-populate the name from event type
+                $this->name = $eventType->name;
+
                 // Load positions from event type
                 $newPositions = $eventType->positions()
                     ->orderBy('event_type_positions.order')
@@ -138,6 +150,8 @@ class Edit extends Component
                 $this->positionAssignments = $keepAssignments;
             }
         } else {
+            // If no event type selected, set name to General
+            $this->name = 'General';
             // Allow manual position selection if no event type
             // Keep existing positions and assignments
         }
@@ -152,10 +166,10 @@ class Edit extends Component
                 'event_type_id' => $this->event_type_id ?: null,
                 'name' => $this->name,
                 'description' => $this->description,
-                'date' => $this->date,
+                'date' => $this->date ?: null,
                 'all_day' => $this->all_day,
-                'start_time' => !$this->all_day ? $this->start_time : null,
-                'end_time' => !$this->all_day ? $this->end_time : null,
+                'start_time' => ! $this->all_day ? $this->start_time : null,
+                'end_time' => ! $this->all_day ? $this->end_time : null,
                 'is_active' => $this->is_active,
                 'is_public' => $this->is_public,
             ];
@@ -187,7 +201,7 @@ class Edit extends Component
                 EventPositionMember::where('event_position_id', $eventPosition->id)->delete();
 
                 // Add new schedule if a member is assigned
-                if (!empty($this->positionAssignments[$positionId])) {
+                if (! empty($this->positionAssignments[$positionId])) {
                     EventPositionMember::create([
                         'event_position_id' => $eventPosition->id,
                         'member_id' => $this->positionAssignments[$positionId],
@@ -200,7 +214,7 @@ class Edit extends Component
 
     public function addPosition()
     {
-        if (!in_array('', $this->selectedPositions)) {
+        if (! in_array('', $this->selectedPositions)) {
             $this->selectedPositions[] = '';
         }
     }

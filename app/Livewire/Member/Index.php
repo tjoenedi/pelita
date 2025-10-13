@@ -24,10 +24,10 @@ class Index extends Component
         return Member::whereIn('organization_id', Auth::user()->organizations->pluck('id'))
             ->when($this->search, function ($query) {
                 $query->where(function ($q) {
-                    $q->where('first_name', 'like', '%' . $this->search . '%')
-                      ->orWhere('last_name', 'like', '%' . $this->search . '%')
-                      ->orWhere('email', 'like', '%' . $this->search . '%')
-                      ->orWhere('phone', 'like', '%' . $this->search . '%');
+                    $q->where('first_name', 'like', '%'.$this->search.'%')
+                        ->orWhere('last_name', 'like', '%'.$this->search.'%')
+                        ->orWhere('email', 'like', '%'.$this->search.'%')
+                        ->orWhere('phone', 'like', '%'.$this->search.'%');
                 });
             })
             ->tap(fn ($query) => $this->sortBy ? $query->orderBy($this->sortBy, $this->sortDirection) : $query)

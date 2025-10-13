@@ -53,9 +53,9 @@ test('unauthenticated users cannot access position pages', function () {
 
     $this->get(route('positions.index'))->assertRedirect('/login');
     $this->get(route('positions.create'))->assertRedirect('/login');
-    
+
     $position = Position::factory()->create([
-        'organization_id' => $this->organization->id
+        'organization_id' => $this->organization->id,
     ]);
     $this->get(route('positions.edit', $position))->assertRedirect('/login');
 });
@@ -68,7 +68,7 @@ test('position pages contain livewire components', function () {
     $response->assertSee('wire:submit="save"', false);
 
     $position = Position::factory()->create([
-        'organization_id' => $this->organization->id
+        'organization_id' => $this->organization->id,
     ]);
     $response = $this->get(route('positions.edit', $position));
     $response->assertSee('wire:submit="save"', false);

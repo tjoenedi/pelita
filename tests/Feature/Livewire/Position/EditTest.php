@@ -14,7 +14,7 @@ beforeEach(function () {
 
 test('can render position edit component', function () {
     $position = Position::factory()->create([
-        'organization_id' => $this->organization->id,'organization_id' => $this->organization->id]);
+        'organization_id' => $this->organization->id, 'organization_id' => $this->organization->id]);
 
     Livewire::test(Edit::class, ['position' => $position])
         ->assertStatus(200);
@@ -56,7 +56,7 @@ test('can update position with new data', function () {
 
 test('validates required fields on update', function () {
     $position = Position::factory()->create([
-        'organization_id' => $this->organization->id,'organization_id' => $this->organization->id]);
+        'organization_id' => $this->organization->id, 'organization_id' => $this->organization->id]);
 
     Livewire::test(Edit::class, ['position' => $position])
         ->set('name', '')
@@ -67,7 +67,7 @@ test('validates required fields on update', function () {
 
 test('validates name max length on update', function () {
     $position = Position::factory()->create([
-        'organization_id' => $this->organization->id,'organization_id' => $this->organization->id]);
+        'organization_id' => $this->organization->id, 'organization_id' => $this->organization->id]);
 
     Livewire::test(Edit::class, ['position' => $position])
         ->set('name', str_repeat('a', 256))
@@ -77,7 +77,7 @@ test('validates name max length on update', function () {
 
 test('validates description max length on update', function () {
     $position = Position::factory()->create([
-        'organization_id' => $this->organization->id,'organization_id' => $this->organization->id]);
+        'organization_id' => $this->organization->id, 'organization_id' => $this->organization->id]);
 
     Livewire::test(Edit::class, ['position' => $position])
         ->set('description', str_repeat('a', 256))
@@ -87,7 +87,7 @@ test('validates description max length on update', function () {
 
 test('validates organization_id exists on update', function () {
     $position = Position::factory()->create([
-        'organization_id' => $this->organization->id,'organization_id' => $this->organization->id]);
+        'organization_id' => $this->organization->id, 'organization_id' => $this->organization->id]);
 
     Livewire::test(Edit::class, ['position' => $position])
         ->set('organization_id', 999)
@@ -112,7 +112,7 @@ test('can update position without description', function () {
 
 test('can cancel and redirect to index', function () {
     $position = Position::factory()->create([
-        'organization_id' => $this->organization->id,'organization_id' => $this->organization->id]);
+        'organization_id' => $this->organization->id, 'organization_id' => $this->organization->id]);
 
     Livewire::test(Edit::class, ['position' => $position])
         ->call('cancel')
@@ -121,10 +121,10 @@ test('can cancel and redirect to index', function () {
 
 test('position model is properly passed to component', function () {
     $position = Position::factory()->create([
-        'organization_id' => $this->organization->id,'name' => 'Test Position']);
+        'organization_id' => $this->organization->id, 'name' => 'Test Position']);
 
     $component = Livewire::test(Edit::class, ['position' => $position]);
-    
+
     expect($component->get('position')->name)->toBe('Test Position');
 });
 

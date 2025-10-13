@@ -34,10 +34,14 @@
                     <select id="event_type_id"
                             wire:model.live="event_type_id"
                             class="w-full border border-gray-300 dark:border-gray-600 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-zinc-800 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400">
-                        <option value="">Select Event Type</option>
-                        @foreach($this->eventTypes as $eventType)
-                            <option value="{{ $eventType->id }}">{{ $eventType->name }}</option>
-                        @endforeach
+                        @if($this->eventTypes->isEmpty())
+                            <option value="">General</option>
+                        @else
+                            <option value="">General (No Type)</option>
+                            @foreach($this->eventTypes as $eventType)
+                                <option value="{{ $eventType->id }}">{{ $eventType->name }}</option>
+                            @endforeach
+                        @endif
                     </select>
                     @error('event_type_id')
                         <span class="text-red-500 text-sm">{{ $message }}</span>

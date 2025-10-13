@@ -1,7 +1,7 @@
 <?php
 
-use App\Models\Position;
 use App\Models\Organization;
+use App\Models\Position;
 
 beforeEach(function () {
     // Create an organization for the tests
@@ -38,8 +38,8 @@ test('position can be created with minimal required data', function () {
 });
 
 test('position fillable attributes are correct', function () {
-    $position = new Position();
-    
+    $position = new Position;
+
     $expectedFillable = [
         'name',
         'description',

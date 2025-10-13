@@ -20,5 +20,4 @@ class MemberController extends Controller
     {
         return view('members.edit', compact('member'));
     }
-
 }

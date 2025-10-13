@@ -5,9 +5,9 @@ use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Log;
 use Tests\TestCase;
 use Twilio\Exceptions\TwilioException;
-use Twilio\Rest\Client;
-use Twilio\Rest\Api\V2010\Account\MessageList;
 use Twilio\Rest\Api\V2010\Account\MessageInstance;
+use Twilio\Rest\Api\V2010\Account\MessageList;
+use Twilio\Rest\Client;
 
 uses(TestCase::class);
 
@@ -27,12 +27,12 @@ test('twilio client sends sms successfully', function () {
     $mockTwilioClient = Mockery::mock(Client::class);
     $mockMessages = Mockery::mock(MessageList::class);
     $mockMessage = Mockery::mock(MessageInstance::class);
-    
+
     $mockMessage->sid = 'test_message_sid';
     $mockMessage->status = 'queued';
-    
+
     $mockTwilioClient->messages = $mockMessages;
-    
+
     $mockMessages
         ->shouldReceive('create')
         ->with('+441234567890', [
@@ -48,11 +48,12 @@ test('twilio client sends sms successfully', function () {
             ->with('test_sid', 'test_token')
             ->andReturnSelf();
         $mock->messages = $mockTwilioClient->messages;
+
         return $mock;
     });
 
-    $twilioClient = new TwilioClient();
-    
+    $twilioClient = new TwilioClient;
+
     // Use reflection to set the mocked client
     $reflection = new ReflectionClass($twilioClient);
     $property = $reflection->getProperty('client');
@@ -80,11 +81,11 @@ test('twilio client handles twilio exception', function () {
 
     $mockTwilioClient = Mockery::mock(Client::class);
     $mockMessages = Mockery::mock(MessageList::class);
-    
+
     $mockTwilioClient->messages = $mockMessages;
-    
+
     $twilioException = new TwilioException('Twilio API error', 400);
-    
+
     $mockMessages
         ->shouldReceive('create')
         ->with('+441234567890', [
@@ -103,11 +104,12 @@ test('twilio client handles twilio exception', function () {
             ->with('test_sid', 'test_token')
             ->andReturnSelf();
         $mock->messages = $mockTwilioClient->messages;
+
         return $mock;
     });
 
-    $twilioClient = new TwilioClient();
-    
+    $twilioClient = new TwilioClient;
+
     $reflection = new ReflectionClass($twilioClient);
     $property = $reflection->getProperty('client');
     $property->setAccessible(true);
@@ -134,11 +136,11 @@ test('twilio client handles generic exception', function () {
 
     $mockTwilioClient = Mockery::mock(Client::class);
     $mockMessages = Mockery::mock(MessageList::class);
-    
+
     $mockTwilioClient->messages = $mockMessages;
-    
+
     $genericException = new Exception('Generic error', 500);
-    
+
     $mockMessages
         ->shouldReceive('create')
         ->with('+441234567890', [
@@ -157,11 +159,12 @@ test('twilio client handles generic exception', function () {
             ->with('test_sid', 'test_token')
             ->andReturnSelf();
         $mock->messages = $mockTwilioClient->messages;
+
         return $mock;
     });
 
-    $twilioClient = new TwilioClient();
-    
+    $twilioClient = new TwilioClient;
+
     $reflection = new ReflectionClass($twilioClient);
     $property = $reflection->getProperty('client');
     $property->setAccessible(true);
