@@ -31,8 +31,6 @@ class Event extends Model
     {
         return [
             'date' => 'date',
-            'start_time' => 'datetime:H:i',
-            'end_time' => 'datetime:H:i',
             'all_day' => 'boolean',
             'is_active' => 'boolean',
             'is_public' => 'boolean',
@@ -70,7 +68,7 @@ class Event extends Model
         return $this->eventPositions()
             ->with(['position', 'schedules.member'])
             ->get()
-            ->map(function ($eventPosition) {
+            ->map(function (\App\Models\EventPosition $eventPosition) {
                 return [
                     'position' => $eventPosition->position,
                     'member' => $eventPosition->getAssignedMember(),

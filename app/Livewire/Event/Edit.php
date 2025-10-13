@@ -67,8 +67,9 @@ class Edit extends Component
         $this->description = $event->description;
         $this->date = $event->date?->format('Y-m-d');
         $this->all_day = $event->all_day;
-        $this->start_time = $event->start_time ? $event->start_time->format('H:i') : '';
-        $this->end_time = $event->end_time ? $event->end_time->format('H:i') : '';
+        // Time fields are stored as strings in TIME format
+        $this->start_time = $event->start_time ? substr($event->start_time, 0, 5) : '';
+        $this->end_time = $event->end_time ? substr($event->end_time, 0, 5) : '';
         $this->is_active = $event->is_active;
         $this->is_public = $event->is_public;
 
@@ -91,6 +92,7 @@ class Edit extends Component
 
         // Load member assignments
         foreach ($this->event->eventPositions as $eventPosition) {
+            /** @var \App\Models\EventPosition $eventPosition */
             $assignedMember = $eventPosition->getAssignedMember();
             $this->positionAssignments[$eventPosition->position_id] = $assignedMember ? $assignedMember->id : '';
         }

@@ -7,7 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class EventScheduleItem extends Model
 {
-    /** @use HasFactory<\Database\Factories\EventScheduleItemFactory> */
     use HasFactory;
 
     protected $table = 'event_schedule_items';

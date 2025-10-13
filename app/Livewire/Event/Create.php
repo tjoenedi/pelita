@@ -65,7 +65,7 @@ class Create extends Component
         $this->date = now()->format('Y-m-d');
 
         // Auto-select the first event type if available
-        $eventTypes = $this->eventTypes;
+        $eventTypes = $this->eventTypes();
         if ($eventTypes->count() > 0) {
             $this->event_type_id = $eventTypes->first()->id;
             $this->updatedEventTypeId($this->event_type_id);

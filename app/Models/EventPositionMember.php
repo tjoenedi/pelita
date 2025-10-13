@@ -8,7 +8,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class EventPositionMember extends Model
 {
-    /** @use HasFactory<\Database\Factories\EventPositionMemberFactory> */
     use HasFactory;
 
     protected $table = 'event_position_member';

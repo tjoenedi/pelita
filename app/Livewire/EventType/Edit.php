@@ -36,7 +36,10 @@ class Edit extends Component
         // Load existing positions with their order
         $this->selectedPositions = $eventType->positions->pluck('id')->toArray();
         foreach ($eventType->positions as $position) {
-            $this->positionOrder[$position->id] = $position->pivot->order;
+            /** @var \App\Models\Position $position */
+            if ($position->pivot) {
+                $this->positionOrder[$position->id] = $position->pivot->order;
+            }
         }
 
         // Sort positionOrder by value to maintain correct order

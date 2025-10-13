@@ -128,7 +128,11 @@
                             @if($event->all_day)
                                 <span class="text-gray-500">All Day</span>
                             @else
-                                {{ $event->start_time?->format('g:i A') }} - {{ $event->end_time?->format('g:i A') }}
+                                @php
+                                    $startTime = $event->start_time ? \Carbon\Carbon::createFromFormat('H:i:s', $event->start_time)->format('g:i A') : '';
+                                    $endTime = $event->end_time ? \Carbon\Carbon::createFromFormat('H:i:s', $event->end_time)->format('g:i A') : '';
+                                @endphp
+                                {{ $startTime }} - {{ $endTime }}
                             @endif
                         </td>
                         <td class="px-6 py-4 text-sm text-gray-500 dark:text-gray-300">

@@ -53,17 +53,15 @@ class Index extends Component
             $shouldDeactivate = false;
 
             // Check if the date is in the past
-            if ($event->date->format('Y-m-d') < $now->format('Y-m-d')) {
+            if ($event->date && $event->date->format('Y-m-d') < $now->format('Y-m-d')) {
                 $shouldDeactivate = true;
             }
             // If it's today, check if the end time has passed
-            elseif ($event->date->format('Y-m-d') == $now->format('Y-m-d')) {
-                // Create a datetime from the date and end_time
+            elseif ($event->date && $event->date->format('Y-m-d') == $now->format('Y-m-d') && $event->end_time) {
+                // Create a datetime from the date and end_time string
                 $endDateTime = $event->date->copy();
-                // The end_time is already a Carbon instance with today's date
-                // We need to get just the time part and apply it to the event date
-                $endTimeString = $event->end_time->format('H:i:s');
-                [$hours, $minutes, $seconds] = explode(':', $endTimeString);
+                // end_time is stored as a TIME string (HH:MM:SS)
+                [$hours, $minutes, $seconds] = explode(':', $event->end_time);
                 $endDateTime->setTime((int) $hours, (int) $minutes, (int) $seconds);
 
                 if ($endDateTime < $now) {
