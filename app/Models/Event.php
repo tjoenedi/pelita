@@ -8,7 +8,12 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Collection;
 
+/**
+ * @property Carbon|null $date
+ */
 class Event extends Model
 {
     /** @use HasFactory<\Database\Factories\EventFactory> */
@@ -63,16 +68,18 @@ class Event extends Model
         return $this->hasMany(EventPositionMember::class);
     }
 
-    public function getAssignedPositionsWithMembers()
+    public function getAssignedPositionsWithMembers(): Collection
     {
-        return $this->eventPositions()
+        /** @var \Illuminate\Database\Eloquent\Collection<int, EventPosition> $eventPositions */
+        $eventPositions = $this->eventPositions()
             ->with(['position', 'schedules.member'])
-            ->get()
-            ->map(function (\App\Models\EventPosition $eventPosition) {
-                return [
-                    'position' => $eventPosition->position,
-                    'member' => $eventPosition->getAssignedMember(),
-                ];
-            });
+            ->get();
+
+        return $eventPositions->map(function (EventPosition $eventPosition) {
+            return [
+                'position' => $eventPosition->position,
+                'member' => $eventPosition->getAssignedMember(),
+            ];
+        });
     }
 }

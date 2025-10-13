@@ -37,9 +37,7 @@ class Edit extends Component
         $this->selectedPositions = $eventType->positions->pluck('id')->toArray();
         foreach ($eventType->positions as $position) {
             /** @var \App\Models\Position $position */
-            if ($position->pivot) {
-                $this->positionOrder[$position->id] = $position->pivot->order;
-            }
+            $this->positionOrder[$position->id] = $position->pivot->order ?? 0;
         }
 
         // Sort positionOrder by value to maintain correct order

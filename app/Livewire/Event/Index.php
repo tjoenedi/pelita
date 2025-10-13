@@ -50,16 +50,21 @@ class Index extends Component
             ->get();
 
         foreach ($timedEvents as $event) {
+            $eventDate = $event->date;
+            if ($eventDate === null) {
+                continue;
+            }
+
             $shouldDeactivate = false;
 
             // Check if the date is in the past
-            if ($event->date && $event->date->format('Y-m-d') < $now->format('Y-m-d')) {
+            if ($eventDate->format('Y-m-d') < $now->format('Y-m-d')) {
                 $shouldDeactivate = true;
             }
             // If it's today, check if the end time has passed
-            elseif ($event->date && $event->date->format('Y-m-d') == $now->format('Y-m-d') && $event->end_time) {
+            elseif ($eventDate->format('Y-m-d') == $now->format('Y-m-d') && $event->end_time) {
                 // Create a datetime from the date and end_time string
-                $endDateTime = $event->date->copy();
+                $endDateTime = $eventDate->copy();
                 // end_time is stored as a TIME string (HH:MM:SS)
                 [$hours, $minutes, $seconds] = explode(':', $event->end_time);
                 $endDateTime->setTime((int) $hours, (int) $minutes, (int) $seconds);

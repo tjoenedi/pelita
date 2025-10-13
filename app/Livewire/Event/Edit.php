@@ -65,7 +65,7 @@ class Edit extends Component
         $this->event_type_id = $event->event_type_id;
         $this->name = $event->name;
         $this->description = $event->description;
-        $this->date = $event->date?->format('Y-m-d');
+        $this->date = $event->date !== null ? $event->date->format('Y-m-d') : '';
         $this->all_day = $event->all_day;
         // Time fields are stored as strings in TIME format
         $this->start_time = $event->start_time ? substr($event->start_time, 0, 5) : '';
@@ -81,13 +81,15 @@ class Edit extends Component
     {
         // If event has an EventType, load positions from it
         if ($this->event->event_type_id && $this->event->eventType) {
-            $this->selectedPositions = $this->event->eventType->positions()
+            /** @var EventType $eventType */
+            $eventType = $this->event->eventType;
+            $this->selectedPositions = $eventType->positions()
                 ->orderBy('event_type_positions.order')
                 ->pluck('positions.id')
                 ->toArray();
         } else {
             // Otherwise load manually selected positions
-            $this->selectedPositions = $this->event->positions()->pluck('positions.id')->toArray();
+            $this->selectedPositions = $this->event->positions->pluck('id')->toArray();
         }
 
         // Load member assignments

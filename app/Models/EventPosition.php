@@ -7,6 +7,9 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
+/**
+ * @property Position $position
+ */
 class EventPosition extends Model
 {
     use HasFactory;
@@ -33,8 +36,11 @@ class EventPosition extends Model
         return $this->hasMany(EventPositionMember::class, 'event_position_id');
     }
 
-    public function getAssignedMember()
+    public function getAssignedMember(): ?Member
     {
-        return $this->schedules()->with('member')->first()?->member;
+        /** @var EventPositionMember|null $schedule */
+        $schedule = $this->schedules()->with('member')->first();
+
+        return $schedule?->member;
     }
 }
