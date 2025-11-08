@@ -14,6 +14,13 @@ use Illuminate\Support\Collection;
 
 /**
  * @property Carbon|null $date
+ * @property ReminderMode|null $reminder_mode
+ * @property string|null $timezone
+ * @property string|null $start_time
+ * @property string|null $name
+ * @property int|null $event_type_id
+ * @property Organization $organization
+ * @property EventType|null $eventType
  */
 class Event extends Model
 {

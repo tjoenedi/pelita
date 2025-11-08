@@ -6,6 +6,12 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
+/**
+ * @property string $name
+ * @property int|null $reminder_days_before
+ * @property string|null $reminder_time
+ * @property string|null $timezone
+ */
 class Organization extends Model
 {
     use HasFactory;

@@ -5,6 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * @property string $first_name
+ * @property string $last_name
+ * @property int $id
+ */
 class Member extends Model
 {
     /** @use HasFactory<\Database\Factories\MemberFactory> */
