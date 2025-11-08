@@ -15,7 +15,7 @@ class ReminderScheduler
 {
     public function scheduleRemindersForEvent(Event $event): void
     {
-        if ($event->reminder_mode === ReminderMode::Disabled) {
+        if ($event->reminder_mode === null || $event->reminder_mode === ReminderMode::Disabled) {
             return;
         }
 
@@ -72,7 +72,7 @@ class ReminderScheduler
         $time = $organization->reminder_time ?? '15:00:00';
         $timezone = $event->timezone ?? $organization->timezone ?? 'America/New_York';
 
-        if ($eventType && $eventType->reminder_enabled === false) {
+        if ($eventType && ! $eventType->reminder_enabled) {
             return null;
         }
 
@@ -96,7 +96,9 @@ class ReminderScheduler
     {
         $members = [];
 
-        foreach ($event->positionSchedules as $schedule) {
+        $schedules = $event->positionSchedules()->with(['member', 'eventPosition.position'])->get();
+
+        foreach ($schedules as $schedule) {
             if ($schedule->member) {
                 $members[$schedule->member_id] = [
                     'member' => $schedule->member,

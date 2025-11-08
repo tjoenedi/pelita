@@ -33,9 +33,18 @@ class SendEventReminder implements ShouldQueue
     {
         $log = ReminderLog::find($this->logId);
 
-        if (! $log || $log->status !== ReminderStatus::Scheduled) {
-            Log::info('Skipping reminder: log not found or not scheduled', [
+        if ($log === null) {
+            Log::info('Skipping reminder: log not found', [
                 'log_id' => $this->logId,
+            ]);
+
+            return;
+        }
+
+        if ($log->status !== ReminderStatus::Scheduled) {
+            Log::info('Skipping reminder: log not scheduled', [
+                'log_id' => $this->logId,
+                'status' => $log->status->value,
             ]);
 
             return;
@@ -45,7 +54,7 @@ class SendEventReminder implements ShouldQueue
         $event = Event::with(['organization', 'eventType'])->find($this->eventId);
         $position = $this->positionId ? Position::find($this->positionId) : null;
 
-        if (! $member || ! $event) {
+        if ($member === null || $event === null) {
             $log->update([
                 'status' => ReminderStatus::Failed,
                 'failure_reason' => 'Member or event not found',

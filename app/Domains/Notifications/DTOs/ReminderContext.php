@@ -18,12 +18,8 @@ class ReminderContext
     {
         $eventTime = null;
         if ($this->event->start_time) {
-            if ($this->event->start_time instanceof \Carbon\Carbon) {
-                $eventTime = $this->event->start_time->format('g:i A');
-            } else {
-                // Handle string time format (HH:MM:SS)
-                $eventTime = \Carbon\Carbon::createFromFormat('H:i:s', $this->event->start_time)->format('g:i A');
-            }
+            // start_time is stored as string (HH:MM:SS)
+            $eventTime = \Carbon\Carbon::createFromFormat('H:i:s', $this->event->start_time)->format('g:i A');
         }
 
         return [
@@ -31,7 +27,7 @@ class ReminderContext
             'event_name' => $this->event->name,
             'event_date' => $this->event->date?->format('F j, Y'),
             'event_time' => $eventTime,
-            'position_name' => $this->position?->name ?? 'Member',
+            'position_name' => $this->position !== null ? $this->position->name : 'Member',
             'organization_name' => $this->event->organization->name,
         ];
     }

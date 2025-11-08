@@ -7,7 +7,9 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
+ * @property int $member_id
  * @property Member $member
+ * @property EventPosition $eventPosition
  */
 class EventPositionMember extends Model
 {

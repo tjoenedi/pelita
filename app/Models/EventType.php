@@ -9,6 +9,11 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
+/**
+ * @property bool $reminder_enabled
+ * @property int|null $email_template_id
+ * @property int|null $sms_template_id
+ */
 class EventType extends Model
 {
     use HasFactory, SoftDeletes;
