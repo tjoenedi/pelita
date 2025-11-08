@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\ReminderMode;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -30,6 +31,9 @@ class Event extends Model
         'organization_id',
         'is_active',
         'is_public',
+        'reminder_mode',
+        'reminder_override',
+        'timezone',
     ];
 
     protected function casts(): array
@@ -39,6 +43,8 @@ class Event extends Model
             'all_day' => 'boolean',
             'is_active' => 'boolean',
             'is_public' => 'boolean',
+            'reminder_mode' => ReminderMode::class,
+            'reminder_override' => 'array',
         ];
     }
 
@@ -81,5 +87,10 @@ class Event extends Model
                 'member' => $eventPosition->getAssignedMember(),
             ];
         });
+    }
+
+    public function reminderLogs(): HasMany
+    {
+        return $this->hasMany(ReminderLog::class);
     }
 }

@@ -11,6 +11,10 @@ This is a **Laravel-based church/organization management system** called "Pelita
 - Pest for testing
 - Domain-Driven Design pattern for complex business logic (see app/Domains/)
 
+## IMPORTANT: Laravel Sail (Docker)
+
+**This project uses Laravel Sail.** Always use `./vendor/bin/sail` prefix for all PHP/Artisan/Composer commands.
+
 ## Key Commands
 
 ### Development
@@ -18,41 +22,42 @@ This is a **Laravel-based church/organization management system** called "Pelita
 # Start all services (server, queue, logs, vite)
 composer run dev
 
-# Or run services individually
-php artisan serve
-php artisan queue:listen --tries=1
-php artisan pail --timeout=0
+# Or run services individually with Sail
+./vendor/bin/sail artisan serve
+./vendor/bin/sail artisan queue:listen --tries=1
+./vendor/bin/sail artisan pail --timeout=0
 npm run dev
 
 # Build frontend assets
 npm run build
 
 # Database operations
-php artisan migrate
-php artisan db:seed
-php artisan migrate:fresh --seed
+./vendor/bin/sail artisan migrate
+./vendor/bin/sail artisan db:seed
+./vendor/bin/sail artisan migrate:fresh --seed
 
 # Create new components/models
-php artisan make:livewire Component/Name
-php artisan make:model ModelName -mfsc  # with migration, factory, seeder, controller
+./vendor/bin/sail artisan make:livewire Component/Name
+./vendor/bin/sail artisan make:model ModelName -mfsc  # with migration, factory, seeder, controller
 ```
 
 ### Testing
 ```bash
 # Run all tests
-php artisan test
+./vendor/bin/sail artisan test
 
 # Run specific test file
-php artisan test tests/Feature/ExampleTest.php
+./vendor/bin/sail artisan test tests/Feature/ExampleTest.php
 
 # Run tests with filter
-php artisan test --filter=testName
+./vendor/bin/sail artisan test --filter=testName
 
 # Code formatting (run before committing)
-vendor/bin/pint --dirty
+./vendor/bin/sail composer pint --dirty
+# Or directly: ./vendor/bin/sail exec laravel.test vendor/bin/pint --dirty
 ```
 
-### Docker/Sail
+### Docker/Sail Commands
 ```bash
 # Start containers
 ./vendor/bin/sail up -d
@@ -62,6 +67,13 @@ vendor/bin/pint --dirty
 
 # Access container shell
 ./vendor/bin/sail shell
+
+# Run any PHP command
+./vendor/bin/sail php -v
+
+# Run composer commands
+./vendor/bin/sail composer install
+./vendor/bin/sail composer update
 ```
 
 ## Architecture & Key Patterns

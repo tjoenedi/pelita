@@ -33,4 +33,14 @@ class Member extends Model
         'birth_date' => 'date',
         'baptism_date' => 'date',
     ];
+
+    public function communicationPreferences()
+    {
+        return $this->hasMany(MemberCommunicationPreference::class);
+    }
+
+    public function reminderLogs()
+    {
+        return $this->hasMany(ReminderLog::class);
+    }
 }

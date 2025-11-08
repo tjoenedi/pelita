@@ -13,10 +13,22 @@ class EventType extends Model
 {
     use HasFactory, SoftDeletes;
 
+    protected function casts(): array
+    {
+        return [
+            'reminder_enabled' => 'boolean',
+            'reminder_schedules' => 'array',
+        ];
+    }
+
     protected $fillable = [
         'name',
         'description',
         'organization_id',
+        'reminder_enabled',
+        'reminder_schedules',
+        'email_template_id',
+        'sms_template_id',
     ];
 
     public function organization(): BelongsTo
@@ -34,5 +46,20 @@ class EventType extends Model
         return $this->belongsToMany(Position::class, 'event_type_positions')
             ->withTimestamps()
             ->orderBy('name');
+    }
+
+    public function communicationTemplates(): HasMany
+    {
+        return $this->hasMany(CommunicationTemplate::class);
+    }
+
+    public function emailTemplate(): BelongsTo
+    {
+        return $this->belongsTo(CommunicationTemplate::class, 'email_template_id');
+    }
+
+    public function smsTemplate(): BelongsTo
+    {
+        return $this->belongsTo(CommunicationTemplate::class, 'sms_template_id');
     }
 }

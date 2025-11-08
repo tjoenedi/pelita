@@ -5,14 +5,23 @@ use App\Http\Controllers\EventTypeController;
 use App\Http\Controllers\MemberController;
 use App\Http\Controllers\PositionController;
 use App\Http\Controllers\TestController;
+use App\Http\Controllers\UnsubscribeController;
+use App\Livewire\Reports\ReminderLogs;
 use App\Livewire\Settings\Appearance;
+use App\Livewire\Settings\Organization\Reminders as OrganizationReminders;
 use App\Livewire\Settings\Password;
 use App\Livewire\Settings\Profile;
+use App\Livewire\Settings\Templates\Create as TemplatesCreate;
+use App\Livewire\Settings\Templates\Edit as TemplatesEdit;
+use App\Livewire\Settings\Templates\Index as TemplatesIndex;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('welcome');
 })->name('home');
+
+Route::get('unsubscribe/{token}', [UnsubscribeController::class, 'show'])->name('unsubscribe.show');
+Route::post('unsubscribe/{token}', [UnsubscribeController::class, 'update'])->name('unsubscribe.update');
 
 Route::view('dashboard', 'dashboard')
     ->middleware(['auth', 'verified'])
@@ -24,6 +33,17 @@ Route::middleware(['auth'])->group(function () {
     Route::get('settings/profile', Profile::class)->name('settings.profile');
     Route::get('settings/password', Password::class)->name('settings.password');
     Route::get('settings/appearance', Appearance::class)->name('settings.appearance');
+
+    // Organization Settings
+    Route::get('settings/organization/reminders', OrganizationReminders::class)->name('settings.organization.reminders');
+
+    // Communication Templates
+    Route::get('settings/templates', TemplatesIndex::class)->name('settings.templates.index');
+    Route::get('settings/templates/create', TemplatesCreate::class)->name('settings.templates.create');
+    Route::get('settings/templates/{template}/edit', TemplatesEdit::class)->name('settings.templates.edit');
+
+    // Reports
+    Route::get('reports/reminder-logs', ReminderLogs::class)->name('reports.reminder-logs');
 
     Route::get('test-flux-table', [TestController::class, 'testFluxTable'])->name('test.flux-table');
 
