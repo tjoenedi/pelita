@@ -239,7 +239,7 @@ class Edit extends Component
     public function sendRemindersNow()
     {
         // Dispatch the job to send reminders immediately (no delay)
-        ScheduleEventReminders::dispatch($this->event);
+        ScheduleEventReminders::dispatch($this->event->id);
 
         session()->flash('success', 'Reminders are being sent.');
     }

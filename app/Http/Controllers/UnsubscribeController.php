@@ -66,7 +66,7 @@ class UnsubscribeController extends Controller
                             ->where('organization_id', $organization->id)
                             ->where('event_type_id', $eventType->id)
                             ->where('channel', $channel)
-                            ->first()?->unsubscribe_token ?? Str::random(64)),
+                            ->first()->unsubscribe_token ?? Str::random(64)),
                     ]
                 );
             }
@@ -90,7 +90,7 @@ class UnsubscribeController extends Controller
                         ->where('organization_id', $organization->id)
                         ->whereNull('event_type_id')
                         ->where('channel', $channel)
-                        ->first()?->unsubscribe_token ?? Str::random(64)),
+                        ->first()->unsubscribe_token ?? Str::random(64)),
                 ]
             );
         }

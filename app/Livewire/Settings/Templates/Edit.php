@@ -97,7 +97,7 @@ class Edit extends Component
             '{event_date}' => '2025-11-02',
             '{event_time}' => '10:00 AM',
             '{position_name}' => 'Usher',
-            '{organization_name}' => Auth::user()->organizations->first()?->name ?? 'Sample Church',
+            '{organization_name}' => Auth::user()->organizations->first()->name ?? 'Sample Church',
             '{unsubscribe_link}' => '[Unsubscribe Link]',
         ];
 
@@ -113,7 +113,7 @@ class Edit extends Component
             '{event_date}' => '2025-11-02',
             '{event_time}' => '10:00 AM',
             '{position_name}' => 'Usher',
-            '{organization_name}' => Auth::user()->organizations->first()?->name ?? 'Sample Church',
+            '{organization_name}' => Auth::user()->organizations->first()->name ?? 'Sample Church',
         ];
 
         return str_replace(array_keys($sampleData), array_values($sampleData), $this->subject);

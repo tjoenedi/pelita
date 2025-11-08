@@ -8,6 +8,21 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Str;
 
+/**
+ * @property int $id
+ * @property int $member_id
+ * @property int $organization_id
+ * @property int|null $event_type_id
+ * @property NotificationChannel $channel
+ * @property bool $is_subscribed
+ * @property \Illuminate\Support\Carbon|null $unsubscribed_at
+ * @property string $unsubscribe_token
+ * @property \Illuminate\Support\Carbon $created_at
+ * @property \Illuminate\Support\Carbon $updated_at
+ * @property-read Member $member
+ * @property-read Organization $organization
+ * @property-read EventType|null $eventType
+ */
 class MemberCommunicationPreference extends Model
 {
     use HasFactory;

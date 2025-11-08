@@ -49,6 +49,7 @@ class Reminders extends Component
 
     public function mount()
     {
+        /** @var \App\Models\Organization|null $organization */
         $organization = Auth::user()->organizations->first();
 
         if (! $organization) {

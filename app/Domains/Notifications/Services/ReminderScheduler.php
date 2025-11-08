@@ -96,9 +96,11 @@ class ReminderScheduler
     {
         $members = [];
 
+        /** @var \Illuminate\Database\Eloquent\Collection<int, \App\Models\EventPositionMember> $schedules */
         $schedules = $event->positionSchedules()->with(['member', 'eventPosition.position'])->get();
 
         foreach ($schedules as $schedule) {
+            // @phpstan-ignore-next-line (Member relationship can be null even with eager loading)
             if ($schedule->member) {
                 $members[$schedule->member_id] = [
                     'member' => $schedule->member,
@@ -153,6 +155,7 @@ class ReminderScheduler
         }
 
         if (empty($channels)) {
+            /** @var \Illuminate\Database\Eloquent\Collection<int, \App\Models\CommunicationTemplate> $templates */
             $templates = $event->organization->communicationTemplates()
                 ->whereNull('event_type_id')
                 ->where('is_default', true)
@@ -163,7 +166,8 @@ class ReminderScheduler
             }
         }
 
-        return array_unique($channels);
+        // Use array_values to reset keys after unique, and map to values for array_unique compatibility
+        return array_values(array_unique($channels, SORT_REGULAR));
     }
 
     protected function getTemplateSnapshot(Event $event, NotificationChannel $channel): array
@@ -177,6 +181,7 @@ class ReminderScheduler
         };
 
         if (! $templateId) {
+            /** @var \App\Models\CommunicationTemplate|null $template */
             $template = $event->organization->communicationTemplates()
                 ->whereNull('event_type_id')
                 ->where('type', $channel)

@@ -8,6 +8,23 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+/**
+ * @property int $id
+ * @property int $member_id
+ * @property int $event_id
+ * @property int|null $event_type_id
+ * @property NotificationChannel $channel
+ * @property \Illuminate\Support\Carbon $scheduled_at
+ * @property \Illuminate\Support\Carbon|null $sent_at
+ * @property ReminderStatus $status
+ * @property string|null $failure_reason
+ * @property array $template_snapshot
+ * @property \Illuminate\Support\Carbon $created_at
+ * @property \Illuminate\Support\Carbon $updated_at
+ * @property-read Member $member
+ * @property-read Event $event
+ * @property-read EventType|null $eventType
+ */
 class ReminderLog extends Model
 {
     use HasFactory;

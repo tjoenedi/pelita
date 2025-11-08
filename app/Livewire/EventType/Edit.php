@@ -63,7 +63,8 @@ class Edit extends Component
 
         // Load reminder settings
         $this->override_reminders = (bool) $eventType->reminder_enabled;
-        if ($eventType->reminder_schedules) {
+        // @phpstan-ignore-next-line (is_array check is necessary for runtime safety)
+        if ($eventType->reminder_schedules && is_array($eventType->reminder_schedules)) {
             $this->reminder_days_before = $eventType->reminder_schedules['days_before'] ?? 1;
             $this->reminder_time = $eventType->reminder_schedules['time'] ?? '09:00';
         }
