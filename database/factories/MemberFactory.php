@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\Organization;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -32,7 +33,7 @@ class MemberFactory extends Factory
             'marital_status' => $this->faker->randomElement(['Single', 'Married', 'Divorced', 'Widowed']),
             'email' => $this->faker->unique()->safeEmail,
             'profile_picture' => $this->faker->imageUrl(640, 480, 'people'),
-            'organization_id' => 1, // Default organization
+            'organization_id' => Organization::factory(),
         ];
     }
 
