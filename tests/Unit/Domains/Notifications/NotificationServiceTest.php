@@ -274,6 +274,7 @@ it('does not send email when member has no email address', function () {
     $context = new ReminderContext($member, $event);
 
     $this->emailProvider->shouldNotReceive('send');
+    $this->emailProvider->shouldReceive('getLastError')->andReturn(null);
 
     $result = $this->service->sendReminder($member, $context, $template, NotificationChannel::Email, $log);
 

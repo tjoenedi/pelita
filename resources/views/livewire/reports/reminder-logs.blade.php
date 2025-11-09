@@ -148,7 +148,7 @@
                         @elseif($log->status === 'failed')
                             <flux:badge color="red" size="sm">Failed</flux:badge>
                         @else
-                            <flux:badge color="zinc" size="sm">{{ ucfirst($log->status) }}</flux:badge>
+                            <flux:badge color="zinc" size="sm">{{ ucfirst($log->status->value) }}</flux:badge>
                         @endif
                     </flux:table.cell>
 
@@ -174,9 +174,9 @@
     <!-- Detail Modal -->
     @if($showDetailModal && $this->selectedLog)
         <flux:modal wire:model="showDetailModal" class="max-w-2xl">
-            <flux:modal.heading>Reminder Details</flux:modal.heading>
-
             <div class="space-y-4">
+                <flux:heading size="lg">Reminder Details</flux:heading>
+
                 <!-- Member Info -->
                 <div>
                     <h3 class="text-sm font-semibold text-zinc-700 dark:text-zinc-300">Member</h3>
@@ -238,11 +238,12 @@
                         <p class="text-sm text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/20 p-3 rounded">{{ $this->selectedLog->error_message }}</p>
                     </div>
                 @endif
-            </div>
 
-            <flux:modal.actions>
-                <flux:button variant="ghost" wire:click="closeModal">Close</flux:button>
-            </flux:modal.actions>
+                <!-- Actions -->
+                <div class="flex justify-end gap-2 pt-4 border-t border-zinc-200 dark:border-zinc-700">
+                    <flux:button variant="ghost" wire:click="closeModal">Close</flux:button>
+                </div>
+            </div>
         </flux:modal>
     @endif
 </div>

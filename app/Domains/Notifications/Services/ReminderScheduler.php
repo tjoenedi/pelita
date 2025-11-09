@@ -72,7 +72,7 @@ class ReminderScheduler
         $time = $organization->reminder_time ?? '15:00:00';
         $timezone = $event->timezone ?? $organization->timezone ?? 'America/New_York';
 
-        if ($eventType && ! $eventType->reminder_enabled) {
+        if ($eventType && $eventType->reminder_enabled === false) {
             return null;
         }
 

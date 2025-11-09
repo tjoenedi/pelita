@@ -52,6 +52,7 @@ it('schedules reminders for event with auto mode', function () {
     EventPositionMember::factory()->create([
         'event_position_id' => $eventPosition->id,
         'member_id' => $member->id,
+        'event_id' => $event->id,
     ]);
 
     CommunicationTemplate::factory()->email()->default()->create([
@@ -131,7 +132,7 @@ it('calculates reminder time correctly for future event', function () {
     $reminderTime = $method->invoke($this->scheduler, $event);
 
     expect($reminderTime)->not->toBeNull()
-        ->and($reminderTime->format('H:i'))->toBe('15:00');
+        ->and($reminderTime->format('H:i'))->toBe('20:00'); // 15:00 EST = 20:00 UTC
 });
 
 it('returns null when event has no date', function () {
@@ -186,6 +187,7 @@ it('triggers manual reminders immediately', function () {
     EventPositionMember::factory()->create([
         'event_position_id' => $eventPosition->id,
         'member_id' => $member->id,
+        'event_id' => $event->id,
     ]);
 
     CommunicationTemplate::factory()->email()->default()->create([
@@ -218,7 +220,7 @@ it('uses organization default reminder settings', function () {
     $reminderTime = $method->invoke($this->scheduler, $event);
 
     expect($reminderTime)->not->toBeNull()
-        ->and($reminderTime->format('H:i'))->toBe('09:00');
+        ->and($reminderTime->format('H:i'))->toBe('17:00'); // 09:00 PST = 17:00 UTC
 });
 
 it('schedules both email and sms when templates exist', function () {
@@ -258,6 +260,7 @@ it('schedules both email and sms when templates exist', function () {
     EventPositionMember::factory()->create([
         'event_position_id' => $eventPosition->id,
         'member_id' => $member->id,
+        'event_id' => $event->id,
     ]);
 
     $this->scheduler->scheduleRemindersForEvent($event->fresh(['positionSchedules.member', 'positionSchedules.eventPosition.position', 'organization', 'eventType']));

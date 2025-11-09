@@ -143,39 +143,44 @@ it('skips when log is not in scheduled status', function () {
 it('handles missing member gracefully', function () {
     $organization = Organization::factory()->create();
     $event = Event::factory()->create(['organization_id' => $organization->id]);
+    $member = Member::factory()->create(['organization_id' => $organization->id]);
 
     $log = ReminderLog::factory()->scheduled()->create([
-        'member_id' => 99999,
+        'member_id' => $member->id,
         'event_id' => $event->id,
     ]);
 
+    $memberId = $member->id;
+    $member->delete();
+
     $this->emailProvider->shouldNotReceive('send');
 
-    $job = new SendEventReminder($log->id, 99999, $event->id);
+    $job = new SendEventReminder($log->id, $memberId, $event->id);
     $job->handle(app(\App\Domains\Notifications\Services\NotificationService::class));
 
-    $log->refresh();
-    expect($log->status)->toBe(ReminderStatus::Failed)
-        ->and($log->failure_reason)->toBe('Member or event not found');
+    expect(ReminderLog::find($log->id))->toBeNull(); // Log should be cascade deleted
 });
 
 it('handles missing event gracefully', function () {
     $organization = Organization::factory()->create();
     $member = Member::factory()->create(['organization_id' => $organization->id]);
+    $event = Event::factory()->create(['organization_id' => $organization->id]);
 
     $log = ReminderLog::factory()->scheduled()->create([
         'member_id' => $member->id,
-        'event_id' => 99999,
+        'event_id' => $event->id,
     ]);
+
+    $eventId = $event->id;
+    $event->delete();
 
     $this->emailProvider->shouldNotReceive('send');
 
-    $job = new SendEventReminder($log->id, $member->id, 99999);
+    $job = new SendEventReminder($log->id, $member->id, $eventId);
     $job->handle(app(\App\Domains\Notifications\Services\NotificationService::class));
 
-    $log->refresh();
-    expect($log->status)->toBe(ReminderStatus::Failed)
-        ->and($log->failure_reason)->toBe('Member or event not found');
+    // EventObserver cancels the log instead of cascade deleting
+    expect(ReminderLog::find($log->id)->status)->toBe(ReminderStatus::Cancelled);
 });
 
 it('handles missing template gracefully', function () {

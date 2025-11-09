@@ -42,6 +42,7 @@ it('schedules reminders for all assigned members', function () {
         EventPositionMember::factory()->create([
             'event_position_id' => $eventPosition->id,
             'member_id' => $member->id,
+            'event_id' => $event->id,
         ]);
     }
 
@@ -118,6 +119,7 @@ it('schedules reminders with correct delay', function () {
     EventPositionMember::factory()->create([
         'event_position_id' => $eventPosition->id,
         'member_id' => $member->id,
+        'event_id' => $event->id,
     ]);
 
     CommunicationTemplate::factory()->email()->default()->create([
@@ -169,6 +171,7 @@ it('schedules multiple channels when templates exist', function () {
     EventPositionMember::factory()->create([
         'event_position_id' => $eventPosition->id,
         'member_id' => $member->id,
+        'event_id' => $event->id,
     ]);
 
     $job = new ScheduleEventReminders($event->id);
@@ -201,6 +204,7 @@ it('does not schedule reminders for events in the past', function () {
     EventPositionMember::factory()->create([
         'event_position_id' => $eventPosition->id,
         'member_id' => $member->id,
+        'event_id' => $event->id,
     ]);
 
     CommunicationTemplate::factory()->email()->default()->create([

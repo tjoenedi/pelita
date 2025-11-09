@@ -12,10 +12,10 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('organizations', function (Blueprint $table) {
-            $table->boolean('reminder_enabled')->default(true)->after('time_zone');
-            $table->integer('reminder_days_before')->default(3)->after('reminder_enabled');
-            $table->time('reminder_time')->default('15:00:00')->after('reminder_days_before');
-            $table->string('timezone')->default('America/New_York')->after('reminder_time');
+            $table->boolean('reminder_enabled')->nullable()->default(true)->after('time_zone');
+            $table->integer('reminder_days_before')->nullable()->default(3)->after('reminder_enabled');
+            $table->time('reminder_time')->nullable()->default('15:00:00')->after('reminder_days_before');
+            $table->string('timezone')->nullable()->default('America/New_York')->after('reminder_time');
         });
     }
 
