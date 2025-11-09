@@ -120,6 +120,96 @@
             @endif
         </div>
 
+        <!-- Reminder Settings Section -->
+        <div class="bg-gray-50 dark:bg-zinc-700 px-4 py-3 rounded-lg">
+            <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100 mb-4">Reminder Settings</h3>
+            <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">
+                Configure reminder defaults for this event type. If not enabled, organization defaults will be used.
+            </p>
+
+            <!-- Override Toggle -->
+            <div class="mb-4">
+                <label class="flex items-center">
+                    <input type="checkbox"
+                           wire:model.live="override_reminders"
+                           class="mr-2 rounded border-gray-300 dark:border-gray-600 text-blue-600 focus:ring-blue-500">
+                    <span class="text-sm font-medium text-gray-700 dark:text-gray-300">
+                        Override organization defaults
+                    </span>
+                </label>
+            </div>
+
+            @if($override_reminders)
+                <div class="space-y-4 pl-6 border-l-2 border-blue-500">
+                    <!-- Days Before -->
+                    <div>
+                        <label for="reminder_days_before" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                            Days Before Event
+                        </label>
+                        <input type="number"
+                               id="reminder_days_before"
+                               wire:model="reminder_days_before"
+                               min="0"
+                               max="30"
+                               class="w-full md:w-48 border border-gray-300 dark:border-gray-600 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-zinc-800 text-gray-900 dark:text-gray-100">
+                        @error('reminder_days_before')
+                            <span class="text-red-500 text-sm">{{ $message }}</span>
+                        @enderror
+                    </div>
+
+                    <!-- Time of Day -->
+                    <div>
+                        <label for="reminder_time" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                            Time of Day
+                        </label>
+                        <input type="time"
+                               id="reminder_time"
+                               wire:model="reminder_time"
+                               class="w-full md:w-48 border border-gray-300 dark:border-gray-600 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-zinc-800 text-gray-900 dark:text-gray-100">
+                        @error('reminder_time')
+                            <span class="text-red-500 text-sm">{{ $message }}</span>
+                        @enderror
+                    </div>
+
+                    <!-- Email Template -->
+                    <div>
+                        <label for="email_template_id" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                            Email Template
+                        </label>
+                        <select id="email_template_id"
+                                wire:model="email_template_id"
+                                class="w-full border border-gray-300 dark:border-gray-600 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-zinc-800 text-gray-900 dark:text-gray-100">
+                            <option value="">Use default</option>
+                            @foreach($this->emailTemplates as $template)
+                                <option value="{{ $template->id }}">{{ $template->name }}</option>
+                            @endforeach
+                        </select>
+                        @error('email_template_id')
+                            <span class="text-red-500 text-sm">{{ $message }}</span>
+                        @enderror
+                    </div>
+
+                    <!-- SMS Template -->
+                    <div>
+                        <label for="sms_template_id" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                            SMS Template
+                        </label>
+                        <select id="sms_template_id"
+                                wire:model="sms_template_id"
+                                class="w-full border border-gray-300 dark:border-gray-600 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-zinc-800 text-gray-900 dark:text-gray-100">
+                            <option value="">Use default</option>
+                            @foreach($this->smsTemplates as $template)
+                                <option value="{{ $template->id }}">{{ $template->name }}</option>
+                            @endforeach
+                        </select>
+                        @error('sms_template_id')
+                            <span class="text-red-500 text-sm">{{ $message }}</span>
+                        @enderror
+                    </div>
+                </div>
+            @endif
+        </div>
+
         <!-- Events Using This Type -->
         @if($eventType->events->count() > 0)
             <div class="bg-yellow-50 dark:bg-yellow-900/20 px-4 py-3 rounded-lg">

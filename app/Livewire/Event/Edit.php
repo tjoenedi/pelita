@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Event;
 
+use App\Domains\Notifications\Jobs\ScheduleEventReminders;
 use App\Models\Event;
 use App\Models\EventPosition;
 use App\Models\EventPositionMember;
@@ -36,6 +37,9 @@ class Edit extends Component
 
     public $is_public = true;
 
+    // Reminder settings
+    public $reminder_mode = 'auto';
+
     // Position management
     public $selectedPositions = [];
 
@@ -51,6 +55,7 @@ class Edit extends Component
         'end_time' => 'nullable|required_if:all_day,false|date_format:H:i|after:start_time',
         'is_active' => 'boolean',
         'is_public' => 'boolean',
+        'reminder_mode' => 'required|in:auto,manual,disabled',
     ];
 
     protected $messages = [
@@ -72,6 +77,7 @@ class Edit extends Component
         $this->end_time = $event->end_time ? substr($event->end_time, 0, 5) : '';
         $this->is_active = $event->is_active;
         $this->is_public = $event->is_public;
+        $this->reminder_mode = $event->reminder_mode ?? 'auto';
 
         // Load existing position assignments
         $this->loadPositionAssignments();
@@ -176,6 +182,7 @@ class Edit extends Component
                 'end_time' => ! $this->all_day ? $this->end_time : null,
                 'is_active' => $this->is_active,
                 'is_public' => $this->is_public,
+                'reminder_mode' => $this->reminder_mode,
             ];
 
             $this->event->update($data);
@@ -227,6 +234,22 @@ class Edit extends Component
     {
         unset($this->selectedPositions[$index]);
         $this->selectedPositions = array_values($this->selectedPositions);
+    }
+
+    public function sendRemindersNow()
+    {
+        // Dispatch the job to send reminders immediately (no delay)
+        ScheduleEventReminders::dispatch($this->event->id);
+
+        session()->flash('success', 'Reminders are being sent.');
+    }
+
+    #[Computed]
+    public function scheduledRemindersCount()
+    {
+        return $this->event->reminderLogs()
+            ->whereIn('status', ['scheduled', 'sent'])
+            ->count();
     }
 
     public function cancel()

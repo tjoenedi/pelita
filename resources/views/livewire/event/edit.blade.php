@@ -215,6 +215,85 @@
             @endif
         </div>
 
+        <!-- Reminder Settings Section -->
+        <div class="bg-gray-50 dark:bg-zinc-700 px-4 py-3 rounded-lg">
+            <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100 mb-4">Reminder Settings</h3>
+            <div class="space-y-4">
+                <p class="text-sm text-gray-600 dark:text-gray-400">
+                    Control how and when reminders are sent to members assigned to this event.
+                </p>
+
+                <div class="space-y-3">
+                    <!-- Auto Mode -->
+                    <div class="flex items-center">
+                        <input type="radio"
+                               id="reminder_mode_auto"
+                               wire:model="reminder_mode"
+                               value="auto"
+                               class="mr-2 border-gray-300 dark:border-gray-600 text-blue-600 focus:ring-blue-500">
+                        <label for="reminder_mode_auto" class="text-sm font-medium text-gray-700 dark:text-gray-300">
+                            Automatic - Schedule reminders based on organization settings
+                        </label>
+                    </div>
+
+                    <!-- Manual Mode -->
+                    <div class="flex items-center">
+                        <input type="radio"
+                               id="reminder_mode_manual"
+                               wire:model="reminder_mode"
+                               value="manual"
+                               class="mr-2 border-gray-300 dark:border-gray-600 text-blue-600 focus:ring-blue-500">
+                        <label for="reminder_mode_manual" class="text-sm font-medium text-gray-700 dark:text-gray-300">
+                            Manual - Reminders must be sent manually
+                        </label>
+                    </div>
+
+                    <!-- Disabled Mode -->
+                    <div class="flex items-center">
+                        <input type="radio"
+                               id="reminder_mode_disabled"
+                               wire:model="reminder_mode"
+                               value="disabled"
+                               class="mr-2 border-gray-300 dark:border-gray-600 text-blue-600 focus:ring-blue-500">
+                        <label for="reminder_mode_disabled" class="text-sm font-medium text-gray-700 dark:text-gray-300">
+                            Disabled - No reminders will be sent
+                        </label>
+                    </div>
+                </div>
+
+                @error('reminder_mode')
+                    <span class="text-red-500 text-sm">{{ $message }}</span>
+                @enderror
+
+                <!-- Reminder Info & Actions -->
+                <div class="mt-4 pt-4 border-t border-gray-200 dark:border-gray-600">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-sm text-gray-700 dark:text-gray-300">
+                                <span class="font-medium">Scheduled/Sent Reminders:</span>
+                                <span class="ml-2">{{ $this->scheduledRemindersCount }}</span>
+                            </p>
+                            <a href="{{ route('reports.reminder-logs') }}?event_id={{ $event->id }}"
+                               class="text-sm text-blue-600 dark:text-blue-400 hover:underline">
+                                View reminder logs
+                            </a>
+                        </div>
+
+                        @if($reminder_mode === 'manual')
+                            <button type="button"
+                                    wire:click="sendRemindersNow"
+                                    wire:loading.attr="disabled"
+                                    wire:target="sendRemindersNow"
+                                    class="px-4 py-2 bg-green-600 dark:bg-green-500 text-white rounded-md hover:bg-green-700 dark:hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 disabled:opacity-50">
+                                <span wire:loading.remove wire:target="sendRemindersNow">Send Reminders Now</span>
+                                <span wire:loading wire:target="sendRemindersNow">Sending...</span>
+                            </button>
+                        @endif
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- Visibility Settings Section -->
         <div class="bg-gray-50 dark:bg-zinc-700 px-4 py-3 rounded-lg">
             <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100 mb-4">Visibility Settings</h3>

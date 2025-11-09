@@ -36,6 +36,9 @@ class Create extends Component
 
     public $is_public = true;
 
+    // Reminder settings
+    public $reminder_mode = 'auto';
+
     // Position management
     public $selectedPositions = [];
 
@@ -51,6 +54,7 @@ class Create extends Component
         'end_time' => 'nullable|required_if:all_day,false|date_format:H:i|after:start_time',
         'is_active' => 'boolean',
         'is_public' => 'boolean',
+        'reminder_mode' => 'required|in:auto,manual,disabled',
     ];
 
     protected $messages = [
@@ -167,6 +171,7 @@ class Create extends Component
                 'organization_id' => Auth::user()->organizations->first()->id ?? null,
                 'is_active' => $this->is_active,
                 'is_public' => $this->is_public,
+                'reminder_mode' => $this->reminder_mode,
             ];
 
             $event = Event::create($data);
